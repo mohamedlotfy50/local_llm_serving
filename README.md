@@ -6,6 +6,8 @@ This project explores serving Large Language Models (LLMs) with a focus on under
 * **Fast Inference:** Optimizing for low-latency response generation.
 * **Concurrent Requests:** Handling multiple user requests efficiently.
 * **Maximum GPU Utilization (Single Instance):** Leveraging the full power of a single GPU for inference.
+* **Local and Containerized Serving:** The deployment will be designed for local execution and containerization (e.g., using Docker) for portability.
+* **Cloud Scalability:** The architecture will be considered with cloud deployment and scaling in mind.
 * **Extensibility:** Gradually expanding to support advanced functionalities:
     * Token Streaming Endpoints
     * End-to-End Voice-to-Voice Communication
@@ -19,6 +21,7 @@ The following technologies are currently being utilized in this project:
 * **Flask:** A lightweight WSGI web application framework for creating the API endpoints.
 * **Hugging Face Transformers:** Providing access to a wide range of pre-trained language models and utilities.
 * **PyTorch:** The underlying deep learning framework for model inference and manipulation.
+* **Docker (Anticipated):** For containerizing the application for consistent deployment across different environments.
 
 ## Focus: Continuous Batching with Customizable Prefill
 
@@ -41,7 +44,7 @@ This project emphasizes building a clean and maintainable codebase by adhering t
     * **Interface Segregation Principle (ISP):** Clients should not be forced to depend on interfaces they do not use.
     * **Dependency Inversion Principle (DIP):** Depend on abstractions, not on concretions.
 
-By following these principles, the aim is to create a system that is easy to understand, modify, and extend to support new models and features.
+By following these principles, the aim is to create a system that is easy to understand, modify, and extend to support new models and features, with consideration for **local deployment, containerization, and potential cloud scalability**.
 
 ## Educational Goals (Checklist)
 
@@ -50,5 +53,5 @@ The primary motivation behind this project is educational, aiming for a comprehe
 * [ ] **Pretraining:** Understanding the initial training process of large language models.
 * [ ] **Supervised Fine-tuning (SFT):** Learning how to adapt pre-trained models for specific downstream tasks using labeled data.
 * [ ] **Reinforcement Learning (RLHF or Reinforcement Learning from Human Feedback):** Exploring techniques to align model behavior with human preferences.
-* [ ] **Deploying:** Packaging and preparing the model for serving in a production-like environment.
-* [ ] **Serving:** Building the infrastructure and API endpoints to make the model accessible for inference.
+* [ ] **Deploying:** Packaging and preparing the model for serving in a production-like environment, including **containerization**.
+* [ ] **Serving:** Building the infrastructure and API endpoints to make the model accessible for inference **locally, in containers, and with potential for cloud scaling**.
