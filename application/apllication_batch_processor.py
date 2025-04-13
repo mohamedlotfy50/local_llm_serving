@@ -21,11 +21,7 @@ class ApplicationBatchProcessor:
             id=data_request.id, conversation=data_request.conversation, task=data_request.task)
         self.samples_ids_queue.append(data_request.id)
 
-    def generate(self,) -> List[DataResponse]:
-
-        if len(self.samples) == 0:
-            return []
-
+    def get_batch(self,) -> AutoRegressiveTextBatch:
         input_batch: AutoRegressiveTextBatch = AutoRegressiveTextBatch.empty()
 
         for index in range(min(len(self.samples_ids_queue), self.max_batch_size)):
@@ -46,6 +42,15 @@ class ApplicationBatchProcessor:
             input_batch.next_tokens_list.append(None)
             self.samples[self.samples_ids_queue[index]].clear_old_data()
 
+        return input_batch
+
+    def generate(self,) -> List[DataResponse]:
+
+        if len(self.samples) == 0:
+            return []
+
+        input_batch = self.get_batch()
+
         input_batch = self.model(auto_regressive_batch=input_batch)
 
         responses_list: List[DataResponse] = []
@@ -57,7 +62,7 @@ class ApplicationBatchProcessor:
                 (input_batch.input_ids_list[index], input_batch.next_tokens_ids_list[index].unsqueeze(0)), dim=-1)
 
             self.samples[sample_id].attention_mask = torch.concat(
-                (input_batch.input_ids_list[index], torch.tensor([1], device=input_batch.input_ids_list[index].device, dtype=input_batch.input_ids_list[index].dtype)), dim=-1)
+                (input_batch.attention_mask_list[index], torch.tensor([1], device=input_batch.attention_mask_list[index].device, dtype=input_batch.attention_mask_list[index].dtype)), dim=-1)
 
             self.samples[sample_id].past_key_values = input_batch.past_key_values[index]
 
@@ -69,7 +74,7 @@ class ApplicationBatchProcessor:
                     id=sample_id, token=input_batch.embedding_list[index], is_done=True))
             else:
                 responses_list.append(DataResponse(
-                    id=sample_id, token=input_batch.next_tokens_list[index], is_done=is_done))
+                    id=sample_id, token='' if is_done else input_batch.next_tokens_list[index], is_done=is_done))
 
             if is_done:
                 del self.samples[sample_id]

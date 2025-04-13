@@ -164,7 +164,7 @@ class AutoRegressiveTextModel:
             )
 
         next_tokens_ids_batch = torch.argmax(
-            torch.softmax(outputs.logits[:, -1, :], dim=-1), dim=-1)
+            torch.softmax(outputs.logits.cpu()[:, -1, :], dim=-1), dim=-1)
 
         next_tokens = self.tokenizer.batch_decode(next_tokens_ids_batch)
 
@@ -172,8 +172,8 @@ class AutoRegressiveTextModel:
 
             auto_regressive_batch.embedding_list[index] = torch.mean(outputs.hidden_states[-1][index]
                                                                      [auto_regressive_batch.attention_mask_list[index].bool(), :], dim=0).cpu().tolist()
-            auto_regressive_batch.next_tokens_ids_list[index] = next_tokens_ids_batch[index].cpu(
-            )
+            auto_regressive_batch.next_tokens_ids_list[index] = next_tokens_ids_batch[index]
+            auto_regressive_batch.is_done_list[index] = next_tokens_ids_batch[index] in self.eos_token_ids
             auto_regressive_batch.next_tokens_list[index] = next_tokens[index]
 
         return auto_regressive_batch

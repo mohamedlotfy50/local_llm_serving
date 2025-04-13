@@ -9,7 +9,7 @@ class DataRequest:
         self.id = id
         self.conversation = conversation
         self.task = task
-        self.output_tokens: List[str] = []
+        self.output_tokens: List[str] = ['']
         self.is_done = False
 
     def add_response(self, data_response: DataResponse) -> None:

@@ -41,10 +41,10 @@ def complete():
 
 def stream_data(request_id):
     while not data_dict[request_id].is_done:
-        for i in range(len(data_dict[request_id].output_tokens)):
+        if len(data_dict[request_id].output_tokens) > 0:
             token = data_dict[request_id].output_tokens.pop(0)
             message = Message(role='assistant', content=token)
-            yield json.dumps(message) + '\n'
+            yield json.dumps(message.to_json()) + '\n'
 
     del data_dict[request_id]
 
